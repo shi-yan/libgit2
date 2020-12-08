@@ -15,7 +15,7 @@
  * New error handling
  ********************************************/
 
-static git_error g_git_oom_error = {
+static git_error oom_error = {
 	"Out of memory",
 	GIT_ERROR_NOMEMORY
 };
@@ -46,7 +46,7 @@ static void set_error(int error_class, char *string)
 
 void git_error_set_oom(void)
 {
-	GIT_THREADSTATE->last_error = &g_git_oom_error;
+	GIT_THREADSTATE->last_error = &oom_error;
 }
 
 void git_error_set(int error_class, const char *fmt, ...)
@@ -145,13 +145,13 @@ int git_error_state_capture(git_error_state *state, int error_code)
 		return 0;
 
 	state->error_code = error_code;
-	state->oom = (error == &g_git_oom_error);
+	state->oom = (error == &oom_error);
 
 	if (error) {
 		state->error_msg.klass = error->klass;
 
 		if (state->oom)
-			state->error_msg.message = g_git_oom_error.message;
+			state->error_msg.message = oom_error.message;
 		else
 			state->error_msg.message = git_buf_detach(error_buf);
 	}
